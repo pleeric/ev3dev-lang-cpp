@@ -235,6 +235,7 @@ class sensor : protected device {
             set_attr_string("mode", v);
             return *this;
         }
+        std::string curr_mode;
 
         // Modes: read-only
         // Returns a list of the valid modes for the sensor.
@@ -352,14 +353,20 @@ class color_sensor : public sensor {
 
 
         // Reflected light intensity as a percentage. Light on sensor is red.
-        int reflected_light_intensity(bool do_set_mode = true) {
-            if (do_set_mode) set_mode(mode_col_reflect);
+        int reflected_light_intensity() {
+            if(mode_col_reflect!=curr_mode){
+                set_mode(mode_col_reflect);
+                curr_mode = mode_col_reflect;
+            }
             return value(0);
         }
 
         // Ambient light intensity. Light on sensor is dimly lit blue.
-        int ambient_light_intensity(bool do_set_mode = true) {
-            if (do_set_mode) set_mode(mode_col_ambient);
+        int ambient_light_intensity() {
+            if(mode_col_ambient!=curr_mode){
+                set_mode(mode_col_ambient);
+                curr_mode = mode_col_ambient;
+            }
             return value(0);
         }
 
@@ -372,32 +379,51 @@ class color_sensor : public sensor {
         //   - 5: Red
         //   - 6: White
         //   - 7: Brown
-        int color(bool do_set_mode = true) {
-            if (do_set_mode) set_mode(mode_col_color);
+        int color() {
+            if(mode_col_color!=curr_mode){
+                set_mode(mode_col_color);
+                curr_mode = mode_col_color;
+            }
             return value(0);
         }
 
         // Red, green, and blue components of the detected color, in the range 0-1020.
-        std::tuple<int, int, int> raw(bool do_set_mode = true) {
-            if (do_set_mode) set_mode(mode_rgb_raw);
+        std::tuple<int, int, int> raw() {
+            if(mode_rgb_raw!=curr_mode){
+                curr_mode = mode_rgb_raw;
+                set_mode(mode_rgb_raw);
+    
+            }
             return std::make_tuple( value(0), value(1), value(2) );
         }
 
         // Red component of the detected color, in the range 0-1020.
-        int red(bool do_set_mode = true) {
-            if (do_set_mode) set_mode(mode_rgb_raw);
+        int red() {
+            if(mode_rgb_raw!=curr_mode){
+                curr_mode = mode_rgb_raw;
+                set_mode(mode_rgb_raw);
+    
+            }
             return value(0);
         }
 
         // Green component of the detected color, in the range 0-1020.
         int green(bool do_set_mode = true) {
-            if (do_set_mode) set_mode(mode_rgb_raw);
+            if(mode_rgb_raw!=curr_mode){
+                curr_mode = mode_rgb_raw;
+                set_mode(mode_rgb_raw);
+    
+            }
             return value(1);
         }
 
         // Blue component of the detected color, in the range 0-1020.
         int blue(bool do_set_mode = true) {
-            if (do_set_mode) set_mode(mode_rgb_raw);
+            if(mode_rgb_raw!=curr_mode){
+                curr_mode = mode_rgb_raw;
+                set_mode(mode_rgb_raw);
+    
+            }
             return value(2);
         }
 };
@@ -426,25 +452,34 @@ class ultrasonic_sensor : public sensor {
         // Single measurement in inches.
         static constexpr char mode_us_si_in[] = "US-SI-IN";
 
-
+        std::string curr_mode;
         // Measurement of the distance detected by the sensor,
         // in centimeters.
         float distance_centimeters(bool do_set_mode = true) {
-            if (do_set_mode) set_mode(mode_us_dist_cm);
+            if(curr_mode != mode_us_dist_cm){
+                set_mode(mode_us_dist_cm);
+                curr_mode = mode_us_dist_cm;
+            }
             return float_value(0);
         }
 
         // Measurement of the distance detected by the sensor,
         // in inches.
-        float distance_inches(bool do_set_mode = true) {
-            if (do_set_mode) set_mode(mode_us_dist_in);
+        float distance_inches() {
+            if(curr_mode != mode_us_dist_in){
+                set_mode(mode_us_dist_in);
+                curr_mode = mode_us_dist_in;
+            }
             return float_value(0);
         }
 
         // Value indicating whether another ultrasonic sensor could
         // be heard nearby.
         bool other_sensor_present(bool do_set_mode = true) {
-            if (do_set_mode) set_mode(mode_us_listen);
+            if(curr_mode != mode_us_listen){
+                set_mode(mode_us_listen);
+                curr_mode = mode_us_listen;
+            }
             return value(0);
         }
 };
